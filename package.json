@@ -1,0 +1,52 @@
+{
+  "name": "mor",
+  "version": "1.0.0",
+  "description": "A living route for react-router-v4",
+  "repository": "fi3ework/react-live-route",
+  "license": "MIT",
+  "authors": "fi3ework",
+  "main": "dist/index.js",
+  "module": "es/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "build": "rm -fr dist && tsc",
+    "dev": "tsc -b -w --pretty",
+    "prepare": "npm run build",
+    "lint": "tslint src",
+    "test": "jest"
+  },
+  "peerDependencies": {
+    "react": ">=16"
+  },
+  "dependencies": {
+    "@types/invariant": "^2.2.29",
+    "invariant": "^2.2.4",
+    "mobx": "^5.8.0",
+    "mobx-react": "^5.4.3",
+    "prop-types": "^15.6.1",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "react-is": "^16.7.0",
+    "warning": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^16.7.18",
+    "@types/react-dom": "^16.0.11",
+    "jest": "^23.1.0",
+    "react-addons-test-utils": "^15.6.2",
+    "tslint": "^5.12.1",
+    "tslint-config-airbnb": "^5.11.1",
+    "tslint-config-prettier": "^1.17.0",
+    "tslint-react": "^3.6.0",
+    "typescript": "^3.2.2"
+  },
+  "keywords": [
+    "react",
+    "router",
+    "route",
+    "routing",
+    "history",
+    "link",
+    "react-live-route"
+  ]
+}
