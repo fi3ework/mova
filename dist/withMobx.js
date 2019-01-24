@@ -32,36 +32,39 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var mobx_react_1 = require("mobx-react");
 var React = require("react");
-function withMobx(model, mapModelProps) {
+function withMobx(model) {
     return function (ComposedComponent) {
         var HOC = /** @class */ (function (_super) {
             __extends(HOC, _super);
             function HOC() {
                 var _this = _super !== null && _super.apply(this, arguments) || this;
-                _this.hasInited = false;
+                _this.injectedProps = {};
                 return _this;
             }
+            // private hasInited: boolean = false
             HOC.prototype.componentWillReact = function () {
                 console.log('will react');
                 // console.log(this.injectedProps)
                 // React.Component.prototype.forceUpdate.call(this)
             };
             HOC.prototype.basePreRender = function () {
-                var propObj = mapModelProps(model);
-                this.injectedProps = propObj;
-                Object.keys(propObj).forEach(function (prop) {
+                var _this = this;
+                var _a = model.obModel, obState = _a.obState, obComputed = _a.obComputed;
+                // ob state
+                Object.keys(obState).forEach(function (prop) {
                     /* tslint:disable */
-                    var _value = propObj[prop];
+                    _this.injectedProps[prop] = obState[prop];
+                });
+                // ob computed
+                var obComputedSnap = obComputed.get();
+                Object.keys(obComputedSnap).forEach(function (prop) {
+                    _this.injectedProps[prop] = obComputedSnap[prop];
                 });
             };
             HOC.prototype.render = function () {
-                console.log('will re-render');
-                // if (!this.hasInited) {
-                //   console.log('init render')
+                console.log('> render');
                 this.basePreRender();
-                // this.hasInited = true
-                // }
-                // TODO: add merge conflict in dev mode
+                console.log(this.injectedProps);
                 return React.createElement(ComposedComponent, __assign({}, this.props, this.injectedProps));
             };
             HOC = __decorate([

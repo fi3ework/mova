@@ -3,6 +3,7 @@ import * as invariant from 'invariant'
 import * as React from 'react'
 // import * as PropTypes from 'prop-types'
 import { gStore } from './globalStore'
+import { isObservable, observable, extendObservable, IObservable, computed, IComputed, IComputedValue } from 'mobx'
 import * as withMobx from './withMobx'
 
 /**
@@ -32,55 +33,86 @@ import * as withMobx from './withMobx'
 type movaType = 'local' | 'route' | 'global' | 'custom'
 
 interface IModel {
-  type: movaType
-  namespace?: string
-  state?: any
+  state: any
   computed?: any
   autorun?: any
   when?: any
   reaction?: any
 }
 
+interface IObservableModel {
+  obState: IObservable
+  obComputed: IComputedValue<any>
+  // obAutorun?: any
+  // obWhen?: any
+  // obReaction?: any
+}
+
 class Mova {
-  private _state: any
+  public model: IModel
+  public obModel!: IObservableModel
 
-  public model = (options: IModel) => {
-    const { type, namespace, state } = options
-    // TODO: better code needed
-    if (['global', 'route', 'local'].indexOf(type) < 0) {
-      throw Error(`[mova]: not invalid state type, type only support 'global', 'route' and 'local'`)
-    }
-    switch (type) {
-      case 'global':
-        invariant(namespace, `[mova]: not invalid state type, type only support 'global', 'route' and 'local'`)
-        this.addToGlobalState(namespace!, state)
-        break
-      case 'route':
-        this.initRouteState(state)
-      case 'local':
-        this.initLocalState(state)
-        break
-    }
-    return this
+  constructor(model) {
+    this.model = model
+    const obState = this.makeStateObservable(this.model.state)
+    const obComputed = this.makeComputed(obState)
+    this.obModel = { obState, obComputed }
   }
 
-  get state() {
-    return this._state
+  // public model = (options: IModel) => {
+  //   this.model =
+  // const { type, namespace, state } = options
+  // TODO: better code needed
+  // if (['global', 'route', 'local'].indexOf(type) < 0) {
+  //   throw Error(`[mova]: not invalid state type, type only support 'global', 'route' and 'local'`)
+  // }
+  // switch (type) {
+  //   case 'global':
+  //     invariant(namespace, `[mova]: not invalid state type, type only support 'global', 'route' and 'local'`)
+  //     this.addToGlobalState(namespace!, state)
+  //     break
+  //   case 'route':
+  //     this.initRouteState(state)
+  //   case 'local':
+  //     this.initLocalState(state)
+  //     break
+  // }
+  // return this
+  // }
+
+  public makeStateObservable = oriState => {
+    return observable.object(oriState)
   }
 
-  private addToGlobalState = (namespace: string, state: any) => {
-    gStore.addNamespace(namespace, state)
+  public makeComputed = (obState: IObservable) => {
+    return computed(() => {
+      return this.model.computed(obState)
+    })
   }
 
-  private initRouteState = (state: any) => {}
+  // public makeStateObservable = state => {
+  //   Object.keys(state).forEach(key => {
+  //     const observableValue = this.makeStatePropsObservable(key, state[key])
+  //   })
+  // }
 
-  private initLocalState = (state: any) => {
-    this._state = state
-  }
+  // public makeStatePropsObservable = (key: string, value: any) => {
+  //   if (isObservable(value)) {
+  //     return value
+  //   } else {
+  //     return observable(value)
+  //   }
+  // }
+
+  // private addToGlobalState = (namespace: string, state: any) => {
+  //   gStore.addNamespace(namespace, state)
+  // }
+
+  // private initRouteState = (state: any) => {}
+
+  // private initLocalState = (state: any) => {
+  //   this._state = state
+  // }
 }
 
-const createMovaModel = options => {
-  return new Mova()
-}
-
-export { createMovaModel }
+export default Mova

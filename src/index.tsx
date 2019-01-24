@@ -1,5 +1,5 @@
 import connect from './connect'
-import { createMovaModel } from './mova'
+import Mova from './mova'
 
-export default createMovaModel
+export default Mova
 export { connect }

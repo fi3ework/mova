@@ -2,37 +2,38 @@ import { observer } from 'mobx-react'
 import * as React from 'react'
 import { IConnectOptions } from './connect'
 
-export default function withMobx(model: any, mapModelProps: any) {
+export default function withMobx(model: any) {
   return ComposedComponent => {
     @observer
     class HOC extends React.Component<any, any> {
-      public injectedProps: any
-      private hasInited: boolean = false
+      public injectedProps: any = {}
+      // private hasInited: boolean = false
 
-      private componentWillReact() {
+      public componentWillReact() {
         console.log('will react')
         // console.log(this.injectedProps)
         // React.Component.prototype.forceUpdate.call(this)
       }
 
       public basePreRender() {
-        const propObj = mapModelProps(model)
-        this.injectedProps = propObj
-        Object.keys(propObj).forEach(prop => {
+        const { obState, obComputed } = model.obModel
+        // ob state
+        Object.keys(obState).forEach(prop => {
           /* tslint:disable */
-          const _value = propObj[prop]
+          this.injectedProps[prop] = obState[prop]
+        })
+
+        // ob computed
+        const obComputedSnap = obComputed.get()
+        Object.keys(obComputedSnap).forEach(prop => {
+          this.injectedProps[prop] = obComputedSnap[prop]
         })
       }
 
       public render() {
-        console.log('will re-render')
-        // if (!this.hasInited) {
-        //   console.log('init render')
+        console.log('> render')
         this.basePreRender()
-        // this.hasInited = true
-        // }
-
-        // TODO: add merge conflict in dev mode
+        console.log(this.injectedProps)
         return <ComposedComponent {...this.props} {...this.injectedProps} />
       }
     }

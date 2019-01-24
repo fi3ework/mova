@@ -20,8 +20,8 @@ export interface IMapState {
   [propName: string]: any
 }
 
-export default (model: any, mapModelProps: any) => {
+export default (model: any) => {
   return view => {
-    return withMobx(model, mapModelProps)(view)
+    return withMobx(model)(view)
   }
 }

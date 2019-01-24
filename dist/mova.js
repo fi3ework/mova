@@ -1,50 +1,43 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-// import * as warning from 'warning'
-var invariant = require("invariant");
-// import * as PropTypes from 'prop-types'
-var globalStore_1 = require("./globalStore");
+var mobx_1 = require("mobx");
 var Mova = /** @class */ (function () {
-    function Mova() {
+    function Mova(model) {
         var _this = this;
-        this.model = function (options) {
-            var type = options.type, namespace = options.namespace, state = options.state;
-            // TODO: better code needed
-            if (['global', 'route', 'local'].indexOf(type) < 0) {
-                throw Error("[mova]: not invalid state type, type only support 'global', 'route' and 'local'");
-            }
-            switch (type) {
-                case 'global':
-                    invariant(namespace, "[mova]: not invalid state type, type only support 'global', 'route' and 'local'");
-                    _this.addToGlobalState(namespace, state);
-                    break;
-                case 'route':
-                    _this.initRouteState(state);
-                case 'local':
-                    _this.initLocalState(state);
-                    break;
-            }
-            return _this;
+        // public model = (options: IModel) => {
+        //   this.model =
+        // const { type, namespace, state } = options
+        // TODO: better code needed
+        // if (['global', 'route', 'local'].indexOf(type) < 0) {
+        //   throw Error(`[mova]: not invalid state type, type only support 'global', 'route' and 'local'`)
+        // }
+        // switch (type) {
+        //   case 'global':
+        //     invariant(namespace, `[mova]: not invalid state type, type only support 'global', 'route' and 'local'`)
+        //     this.addToGlobalState(namespace!, state)
+        //     break
+        //   case 'route':
+        //     this.initRouteState(state)
+        //   case 'local':
+        //     this.initLocalState(state)
+        //     break
+        // }
+        // return this
+        // }
+        this.makeStateObservable = function (oriState) {
+            return mobx_1.observable.object(oriState);
         };
-        this.addToGlobalState = function (namespace, state) {
-            globalStore_1.gStore.addNamespace(namespace, state);
+        this.makeComputed = function (obState) {
+            return mobx_1.computed(function () {
+                return _this.model.computed(obState);
+            });
         };
-        this.initRouteState = function (state) { };
-        this.initLocalState = function (state) {
-            _this._state = state;
-        };
+        this.model = model;
+        var obState = this.makeStateObservable(this.model.state);
+        var obComputed = this.makeComputed(obState);
+        this.obModel = { obState: obState, obComputed: obComputed };
     }
-    Object.defineProperty(Mova.prototype, "state", {
-        get: function () {
-            return this._state;
-        },
-        enumerable: true,
-        configurable: true
-    });
     return Mova;
 }());
-var createMovaModel = function (options) {
-    return new Mova();
-};
-exports.createMovaModel = createMovaModel;
+exports.default = Mova;
 //# sourceMappingURL=mova.js.map

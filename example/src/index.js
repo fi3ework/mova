@@ -2,33 +2,33 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { observable, computed, action } from 'mobx'
 import { Provider } from 'mobx-react'
-import { connect } from '../../dist/index'
+import Mova, { connect } from '../../dist/index'
 import { BrowserRouter } from 'react-router-dom'
 import './styles.css'
 
 // 写法 1 model
-class Model {
-  @observable
-  name = 'fi3ework'
-  @observable
-  pets = ['cat1']
-  @computed
-  get petCount() {
-    return this.pets.length
-  }
-  @action
-  increase = () => {
-    this.pets.push('new cat')
-  }
-  @action
-  decrease = () => {
-    this.pets.pop()
-  }
-}
-const model = new Model()
+// class Model {
+//   @observable
+//   name = 'fi3ework'
+//   @observable
+//   pets = ['cat1']
+//   @computed
+//   get petCount() {
+//     return this.pets.length
+//   }
+//   @action
+//   increase = () => {
+//     this.pets.push('new cat')
+//   }
+//   @action
+//   decrease = () => {
+//     this.pets.pop()
+//   }
+// }
+// const model = new Model()
 
 // 写法 2 model
-const model1 = Mova.model({
+const model = new Mova({
   state: {
     name: 'fi3ework',
     pets: ['cat1']
@@ -38,43 +38,32 @@ const model1 = Mova.model({
   }
 })
 
-// 写法 1 demo
-const PetsCounter = connect(
-  model,
-  model => {
-    return {
-      petsCount: model.petCount
-    }
-  }
-)(Title)
-
-// 写法 1 demo
-const PetsCounter = connect(
-  model,
-  model => {
-    return {
-      petsCount: model.petCount
-    }
-  }
-)(Title)
+// // 写法 1 demo
+// const PetsCounter = connect(
+//   model,
+//   model => {
+//     return {
+//       petsCount: model.petCount
+//     }
+//   }
+// )(Title)
 
 // 写法 2 demo
-const PetsCounter2 = connect(model1)(Title)
-
-// ...
-const StateButtons = connect(
-  model,
-  model => {
-    return {
-      increase: model.increase,
-      decrease: model.decrease
-    }
-  }
-)(Buttons)
-
 const Title = props => {
   return <div className="App">{props.petsCount}</div>
 }
+const PetsCounter = connect(model)(Title)
+
+// ...
+// const StateButtons = connect(
+//   model,
+//   model => {
+//     return {
+//       increase: model.increase,
+//       decrease: model.decrease
+//     }
+//   }
+// )(Buttons)
 
 const List = props => {
   return props.pets.map(item => {
@@ -95,7 +84,7 @@ const App = () => {
   return (
     <div>
       <PetsCounter />
-      <StateButtons />
+      {/* <StateButtons /> */}
     </div>
   )
 }
