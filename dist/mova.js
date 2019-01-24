@@ -47,4 +47,4 @@ var createMovaModel = function (options) {
     return new Mova();
 };
 exports.createMovaModel = createMovaModel;
-//# sourceMappingURL=mor.js.map
+//# sourceMappingURL=mova.js.map

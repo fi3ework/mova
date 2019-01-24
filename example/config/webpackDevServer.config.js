@@ -16,13 +16,13 @@ module.exports = function(proxy, allowedHost) {
     // https://github.com/webpack/webpack-dev-server/issues/887
     // https://medium.com/webpack/webpack-dev-server-middleware-security-issues-1489d950874a
     // However, it made several existing use cases such as development in cloud
-    // environment or subdomains in development significantly more complicated:
+    // environment or subdomains in development significantly movae complicated:
     // https://github.com/facebookincubator/create-react-app/issues/2271
     // https://github.com/facebookincubator/create-react-app/issues/2233
     // While we're investigating better solutions, for now we will take a
     // compromise. Since our WDS configuration only serves files in the `public`
     // folder we won't consider accessing them a vulnerability. However, if you
-    // use the `proxy` feature, it gets more dangerous because it can expose
+    // use the `proxy` feature, it gets movae dangerous because it can expose
     // remote code execution vulnerabilities in backends like Django and Rails.
     // So we will disable the host check normally, but enable it if you have
     // specified the `proxy` setting. Finally, we let you override it if you
@@ -35,7 +35,7 @@ module.exports = function(proxy, allowedHost) {
     // It will still show compile warnings and errors with this setting.
     clientLogLevel: 'none',
     // By default WebpackDevServer serves physical files from current directory
-    // in addition to all the virtual build products that it serves from memory.
+    // in addition to all the virtual build products that it serves from memovay.
     // This is confusing because those files won’t automatically be available in
     // production build folder unless we copy them. However, copying the whole
     // project directory is dangerous because we may expose sensitive files.

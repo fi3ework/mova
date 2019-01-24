@@ -8,7 +8,7 @@ var GlobalStore = /** @class */ (function () {
                 _this[namespace] = state;
             }
             else {
-                console.warn("[mor]: " + namespace + " is already exist, and it will be replaced by a new state");
+                console.warn("[mova]: " + namespace + " is already exist, and it will be replaced by a new state");
             }
         };
         this.hasNamespace = function (namespace) {

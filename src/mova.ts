@@ -29,26 +29,30 @@ import * as withMobx from './withMobx'
  * - 局部状态注册为全局的状态
  */
 
-type morType = 'global' | 'route' | 'local'
+type movaType = 'local' | 'route' | 'global' | 'custom'
 
 interface IModel {
-  type: morType
-  state: any
+  type: movaType
   namespace?: string
+  state?: any
+  computed?: any
+  autorun?: any
+  when?: any
+  reaction?: any
 }
 
-class Mor {
+class Mova {
   private _state: any
 
   public model = (options: IModel) => {
     const { type, namespace, state } = options
     // TODO: better code needed
     if (['global', 'route', 'local'].indexOf(type) < 0) {
-      throw Error(`[mor]: not invalid state type, type only support 'global', 'route' and 'local'`)
+      throw Error(`[mova]: not invalid state type, type only support 'global', 'route' and 'local'`)
     }
     switch (type) {
       case 'global':
-        invariant(namespace, `[mor]: not invalid state type, type only support 'global', 'route' and 'local'`)
+        invariant(namespace, `[mova]: not invalid state type, type only support 'global', 'route' and 'local'`)
         this.addToGlobalState(namespace!, state)
         break
       case 'route':
@@ -75,8 +79,8 @@ class Mor {
   }
 }
 
-const createMorModel = options => {
-  return new Mor()
+const createMovaModel = options => {
+  return new Mova()
 }
 
-export { createMorModel }
+export { createMovaModel }

@@ -14,7 +14,7 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: ENOENT: no such file or directory, lstat '/Users/wei/SideProject/mor/example/node_modules/mor/node_modules/react/node_modules'
+  Error: ENOENT: no such file or directory, lstat '/Users/wei/SideProject/mova/example/node_modules/mova/node_modules/react/node_modules'
 
 npm manifest: 
   {
@@ -49,7 +49,7 @@ npm manifest:
       "html-webpack-plugin": "2.29.0",
       "jest": "20.0.4",
       "mobx": "^5.8.0",
-      "mor": "../",
+      "mova": "../",
       "object-assign": "4.1.1",
       "postcss-flexbugs-fixes": "3.2.0",
       "postcss-loader": "2.0.8",

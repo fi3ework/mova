@@ -37,11 +37,13 @@ function withMobx(model, mapModelProps) {
         var HOC = /** @class */ (function (_super) {
             __extends(HOC, _super);
             function HOC() {
-                return _super !== null && _super.apply(this, arguments) || this;
+                var _this = _super !== null && _super.apply(this, arguments) || this;
+                _this.hasInited = false;
+                return _this;
             }
-            // private hasInited: boolean = false
             HOC.prototype.componentWillReact = function () {
                 console.log('will react');
+                // console.log(this.injectedProps)
                 // React.Component.prototype.forceUpdate.call(this)
             };
             HOC.prototype.basePreRender = function () {
@@ -50,14 +52,15 @@ function withMobx(model, mapModelProps) {
                 Object.keys(propObj).forEach(function (prop) {
                     /* tslint:disable */
                     var _value = propObj[prop];
-                    console.log(_value);
                 });
             };
             HOC.prototype.render = function () {
                 console.log('will re-render');
-                console.log('init render');
+                // if (!this.hasInited) {
+                //   console.log('init render')
                 this.basePreRender();
                 // this.hasInited = true
+                // }
                 // TODO: add merge conflict in dev mode
                 return React.createElement(ComposedComponent, __assign({}, this.props, this.injectedProps));
             };

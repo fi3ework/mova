@@ -7,10 +7,11 @@ export default function withMobx(model: any, mapModelProps: any) {
     @observer
     class HOC extends React.Component<any, any> {
       public injectedProps: any
-      // private hasInited: boolean = false
+      private hasInited: boolean = false
 
       private componentWillReact() {
         console.log('will react')
+        // console.log(this.injectedProps)
         // React.Component.prototype.forceUpdate.call(this)
       }
 
@@ -20,15 +21,16 @@ export default function withMobx(model: any, mapModelProps: any) {
         Object.keys(propObj).forEach(prop => {
           /* tslint:disable */
           const _value = propObj[prop]
-          console.log(_value)
         })
       }
 
       public render() {
         console.log('will re-render')
-        console.log('init render')
+        // if (!this.hasInited) {
+        //   console.log('init render')
         this.basePreRender()
         // this.hasInited = true
+        // }
 
         // TODO: add merge conflict in dev mode
         return <ComposedComponent {...this.props} {...this.injectedProps} />
