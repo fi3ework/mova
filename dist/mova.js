@@ -4,26 +4,14 @@ var mobx_1 = require("mobx");
 var Mova = /** @class */ (function () {
     function Mova(model) {
         var _this = this;
-        // public model = (options: IModel) => {
-        //   this.model =
-        // const { type, namespace, state } = options
-        // TODO: better code needed
-        // if (['global', 'route', 'local'].indexOf(type) < 0) {
-        //   throw Error(`[mova]: not invalid state type, type only support 'global', 'route' and 'local'`)
-        // }
-        // switch (type) {
-        //   case 'global':
-        //     invariant(namespace, `[mova]: not invalid state type, type only support 'global', 'route' and 'local'`)
-        //     this.addToGlobalState(namespace!, state)
-        //     break
-        //   case 'route':
-        //     this.initRouteState(state)
-        //   case 'local':
-        //     this.initLocalState(state)
-        //     break
-        // }
-        // return this
-        // }
+        this.bindAction = function (actions, obState) {
+            var boundAction = {};
+            Object.keys(actions).forEach(function (actProp) {
+                var act = actions[actProp];
+                boundAction[actProp] = mobx_1.action(function () { return act(obState); });
+            });
+            return boundAction;
+        };
         this.makeStateObservable = function (oriState) {
             return mobx_1.observable.object(oriState);
         };
@@ -33,9 +21,10 @@ var Mova = /** @class */ (function () {
             });
         };
         this.model = model;
-        var obState = this.makeStateObservable(this.model.state);
+        var obState = this.makeStateObservable(model.state);
         var obComputed = this.makeComputed(obState);
-        this.obModel = { obState: obState, obComputed: obComputed };
+        var boundAction = this.bindAction(model.action, obState);
+        this.obModel = { obState: obState, obComputed: obComputed, boundAction: boundAction };
     }
     return Mova;
 }());

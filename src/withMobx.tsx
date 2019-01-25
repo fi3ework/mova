@@ -11,12 +11,10 @@ export default function withMobx(model: any) {
 
       public componentWillReact() {
         console.log('will react')
-        // console.log(this.injectedProps)
-        // React.Component.prototype.forceUpdate.call(this)
       }
 
       public basePreRender() {
-        const { obState, obComputed } = model.obModel
+        const { obState, obComputed, boundAction } = model.obModel
         // ob state
         Object.keys(obState).forEach(prop => {
           /* tslint:disable */
@@ -27,6 +25,12 @@ export default function withMobx(model: any) {
         const obComputedSnap = obComputed.get()
         Object.keys(obComputedSnap).forEach(prop => {
           this.injectedProps[prop] = obComputedSnap[prop]
+        })
+
+        // ob actions
+        // debugger
+        Object.keys(boundAction).forEach(actionKey => {
+          this.injectedProps[actionKey] = boundAction[actionKey]
         })
       }
 

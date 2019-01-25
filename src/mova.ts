@@ -3,7 +3,16 @@ import * as invariant from 'invariant'
 import * as React from 'react'
 // import * as PropTypes from 'prop-types'
 import { gStore } from './globalStore'
-import { isObservable, observable, extendObservable, IObservable, computed, IComputed, IComputedValue } from 'mobx'
+import {
+  isObservable,
+  observable,
+  extendObservable,
+  IObservable,
+  computed,
+  IComputed,
+  IComputedValue,
+  action
+} from 'mobx'
 import * as withMobx from './withMobx'
 
 /**
@@ -35,6 +44,7 @@ type movaType = 'local' | 'route' | 'global' | 'custom'
 interface IModel {
   state: any
   computed?: any
+  action?: any
   autorun?: any
   when?: any
   reaction?: any
@@ -43,6 +53,7 @@ interface IModel {
 interface IObservableModel {
   obState: IObservable
   obComputed: IComputedValue<any>
+  boundAction: any
   // obAutorun?: any
   // obWhen?: any
   // obReaction?: any
@@ -54,31 +65,20 @@ class Mova {
 
   constructor(model) {
     this.model = model
-    const obState = this.makeStateObservable(this.model.state)
+    const obState = this.makeStateObservable(model.state)
     const obComputed = this.makeComputed(obState)
-    this.obModel = { obState, obComputed }
+    const boundAction = this.bindAction(model.action, obState)
+    this.obModel = { obState, obComputed, boundAction }
   }
 
-  // public model = (options: IModel) => {
-  //   this.model =
-  // const { type, namespace, state } = options
-  // TODO: better code needed
-  // if (['global', 'route', 'local'].indexOf(type) < 0) {
-  //   throw Error(`[mova]: not invalid state type, type only support 'global', 'route' and 'local'`)
-  // }
-  // switch (type) {
-  //   case 'global':
-  //     invariant(namespace, `[mova]: not invalid state type, type only support 'global', 'route' and 'local'`)
-  //     this.addToGlobalState(namespace!, state)
-  //     break
-  //   case 'route':
-  //     this.initRouteState(state)
-  //   case 'local':
-  //     this.initLocalState(state)
-  //     break
-  // }
-  // return this
-  // }
+  public bindAction = (actions, obState: IObservable) => {
+    const boundAction = {}
+    Object.keys(actions).forEach((actProp: any) => {
+      const act = actions[actProp]
+      boundAction[actProp] = action(() => act(obState))
+    })
+    return boundAction
+  }
 
   public makeStateObservable = oriState => {
     return observable.object(oriState)
@@ -112,6 +112,27 @@ class Mova {
 
   // private initLocalState = (state: any) => {
   //   this._state = state
+  // }
+
+  // public model = (options: IModel) => {
+  //   this.model =
+  // const { type, namespace, state } = options
+  // TODO: better code needed
+  // if (['global', 'route', 'local'].indexOf(type) < 0) {
+  //   throw Error(`[mova]: not invalid state type, type only support 'global', 'route' and 'local'`)
+  // }
+  // switch (type) {
+  //   case 'global':
+  //     invariant(namespace, `[mova]: not invalid state type, type only support 'global', 'route' and 'local'`)
+  //     this.addToGlobalState(namespace!, state)
+  //     break
+  //   case 'route':
+  //     this.initRouteState(state)
+  //   case 'local':
+  //     this.initLocalState(state)
+  //     break
+  // }
+  // return this
   // }
 }
 

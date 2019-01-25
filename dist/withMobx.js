@@ -44,12 +44,10 @@ function withMobx(model) {
             // private hasInited: boolean = false
             HOC.prototype.componentWillReact = function () {
                 console.log('will react');
-                // console.log(this.injectedProps)
-                // React.Component.prototype.forceUpdate.call(this)
             };
             HOC.prototype.basePreRender = function () {
                 var _this = this;
-                var _a = model.obModel, obState = _a.obState, obComputed = _a.obComputed;
+                var _a = model.obModel, obState = _a.obState, obComputed = _a.obComputed, boundAction = _a.boundAction;
                 // ob state
                 Object.keys(obState).forEach(function (prop) {
                     /* tslint:disable */
@@ -59,6 +57,11 @@ function withMobx(model) {
                 var obComputedSnap = obComputed.get();
                 Object.keys(obComputedSnap).forEach(function (prop) {
                     _this.injectedProps[prop] = obComputedSnap[prop];
+                });
+                // ob actions
+                // debugger
+                Object.keys(boundAction).forEach(function (actionKey) {
+                    _this.injectedProps[actionKey] = boundAction[actionKey];
                 });
             };
             HOC.prototype.render = function () {

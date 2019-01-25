@@ -33,6 +33,14 @@ const model = new Mova({
     name: 'fi3ework',
     pets: ['cat1']
   },
+  action: {
+    incr(state) {
+      state.pets.push('new pats')
+    },
+    decr(state) {
+      state.pets.pop()
+    }
+  },
   computed: state => {
     return { petsCount: state.pets.length }
   }
@@ -49,21 +57,10 @@ const model = new Mova({
 // )(Title)
 
 // 写法 2 demo
-const Title = props => {
+const PureTitle = props => {
   return <div className="App">{props.petsCount}</div>
 }
-const PetsCounter = connect(model)(Title)
-
-// ...
-// const StateButtons = connect(
-//   model,
-//   model => {
-//     return {
-//       increase: model.increase,
-//       decrease: model.decrease
-//     }
-//   }
-// )(Buttons)
+const Title = connect(model)(PureTitle)
 
 const List = props => {
   return props.pets.map(item => {
@@ -71,20 +68,22 @@ const List = props => {
   })
 }
 
-const Buttons = props => {
+const PureButtons = props => {
   return (
     <div>
-      <button onClick={props.increase}>+</button>
-      <button onClick={props.decrease}>-</button>
+      <button onClick={props.incr}>+</button>
+      <button onClick={props.decr}>-</button>
     </div>
   )
 }
 
+const Buttons = connect(model)(PureButtons)
+
 const App = () => {
   return (
     <div>
-      <PetsCounter />
-      {/* <StateButtons /> */}
+      <Title />
+      <Buttons />
     </div>
   )
 }
